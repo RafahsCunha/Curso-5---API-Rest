@@ -26,14 +26,7 @@ namespace FilmesAPI.Controllers
         [HttpGet("{id}")]// a expressão "{id}" é a forma de passar o parâmetro id do método abaixo. O valor é passado dentro da URL ex.: https://localhost:7206/filme/1 . A url com /1 é a forma de saber que estamos utilizando o httpget com parâmetro
         public Filme RecuperaFilmePeloId(int id)
         {
-            foreach(Filme filme in filmes)
-            {
-                if(filme.Id == id)
-                {
-                    return filme;
-                }
-            }
-            return null;
+            return filmes.FirstOrDefault(filme => filme.Id == id); // Função lâmbida... Estudar
         }
     }
 }
