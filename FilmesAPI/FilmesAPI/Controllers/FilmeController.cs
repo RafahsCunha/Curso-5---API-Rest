@@ -11,22 +11,29 @@ namespace FilmesAPI.Controllers
         private static int id = 1;
 
         [HttpPost]
-        public void AdicionaFilme([FromBody] Filme filme)//[FromBody] a informação do filme vem do corpo da requisição, ou seja, do post que o usuario fez
+        public IActionResult AdicionaFilme([FromBody] Filme filme)//[FromBody] a informação do filme vem do corpo da requisição, ou seja, do post que o usuario fez
         {
             filme.Id = id++;
             filmes.Add(filme);
+            return CreatedAtAction(nameof(RecuperaFilmePeloId), new { Id = filme.Id }, filme);
         }
 
         [HttpGet]
-        public IEnumerable<Filme> RecuperarFilmes() // IEnumerable é uma interface que herdada na classe list 
+        public IActionResult RecuperarFilmes() // IActionResult é uma interface de resultado de ação. Ex ok()
         {
-            return filmes;
+            return Ok(filmes);
         }
 
         [HttpGet("{id}")]// a expressão "{id}" é a forma de passar o parâmetro id do método abaixo. O valor é passado dentro da URL ex.: https://localhost:7206/filme/1 . A url com /1 é a forma de saber que estamos utilizando o httpget com parâmetro
-        public Filme RecuperaFilmePeloId(int id)
+        public IActionResult RecuperaFilmePeloId(int id) // IActionResult é uma interface de resultado de ação. Ex ok() e NotFound()
         {
-            return filmes.FirstOrDefault(filme => filme.Id == id); // Função lâmbida... Estudar
+            Filme filme = filmes.FirstOrDefault(filme => filme.Id == id); // Função lâmbida... Estudar
+            if(filme != null)
+            {
+                return Ok(filme);// Ação do IActionResult
+            }
+            return NotFound(); // Ação do IActionResult
+
         }
     }
 }
