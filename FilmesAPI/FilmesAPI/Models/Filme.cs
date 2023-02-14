@@ -5,6 +5,8 @@ namespace FilmesAPI.Models
 {
     public class Filme
     {
+        [Key] // Id é uma chave primária do banco
+        [Required] // Id é obrigatório
         public int Id { get; set; }
 
         [Required (ErrorMessage = "O campo Título é obrigatório")]// Indica que o Titulo é um campo obrigatório. ErrorMessage define qual será a mensagem de erro exibida
