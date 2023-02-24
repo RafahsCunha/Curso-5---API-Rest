@@ -1,4 +1,5 @@
 ﻿using FilmesAPI.Data;
+using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +18,15 @@ namespace FilmesAPI.Controllers
         
 
         [HttpPost]
-        public IActionResult AdicionaFilme([FromBody] Filme filme)//[FromBody] a informação do filme vem do corpo da requisição, ou seja, do post que o usuario fez
+        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)//[FromBody] a informação do filme vem do corpo da requisição, ou seja, do post que o usuario fez
         {
+            Filme filme = new Filme
+            {
+                Titulo = filmeDto.Titulo,
+                Diretor =   filmeDto.Diretor,
+                Genero = filmeDto.Genero,
+                Duracao = filmeDto.Duracao,
+            };
             _context.Filmes.Add(filme);// Adiciona filmes
             _context.SaveChanges();// Salva as alterações no banco de dados
             return CreatedAtAction(nameof(RecuperaFilmePeloId), new { Id = filme.Id }, filme);
@@ -36,29 +44,37 @@ namespace FilmesAPI.Controllers
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id); // Função lâmbida... Estudar
             if(filme != null)
             {
-                return Ok(filme);// Ação do IActionResult
+                ReadFilmeDto filmeDto = new ReadFilmeDto
+                {
+                    Titulo = filme.Titulo,
+                    Diretor = filme.Diretor,
+                    Duracao = filme.Duracao,
+                    Id = filme.Id,
+                    HoraDaColsulta = DateTime.Now
+                };
+                return Ok(filmeDto);
             }
             return NotFound(); // Ação do IActionResult
 
         }
 
         [HttpPut("{id}")] // recebe o id do parâmetro abaixo
-        public  IActionResult AtualizaFilme(int id, [FromBody] Filme filmeNovo)
+        public  IActionResult AtualizaFilme(int id, [FromBody] ReadFilmeDto filmeDto) // [FromBody] corpo da requisição
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if(filme == null)
             {
                 return NotFound();
             }
-            filme.Titulo = filmeNovo.Titulo;
-            filme.Genero = filmeNovo.Genero;
-            filme.Duracao = filmeNovo.Duracao;
-            filme.Diretor = filmeNovo.Diretor;
+            filme.Titulo = filmeDto.Titulo;
+            filme.Genero = filmeDto.Genero;
+            filme.Duracao = filmeDto.Duracao;
+            filme.Diretor = filmeDto.Diretor;
             _context.SaveChanges();
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}")]// detela pelo "id"
         public IActionResult DeletaFilme(int id)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
