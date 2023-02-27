@@ -19,8 +19,10 @@ namespace FilmesAPI
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());// Inicializando a extensão Automapper - Utilizando o dominio da aplicação com a extensão AutoMapper
         }
+
+        
 
         public void Configure(WebApplication app, IWebHostEnvironment enviroment)
         {
