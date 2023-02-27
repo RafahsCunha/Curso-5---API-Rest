@@ -8,10 +8,9 @@ namespace FilmesAPI.Profiles
     {
         public FilmeProfile()
         {
-            // Conversão de tipos
-            CreateMap<CreateFilmeDto, Filme>();// Converte de CreateFilmeDto para Filme
-            CreateMap<Filme, ReadFilmeDto>();// Converte de Filme para ReadFilmeDto
-            CreateMap<UpdateFilmeDto, Filme>();// Converte de UpdateFilmeDto para Filme
+            CreateMap<CreateFilmeDto, Filme>();
+            CreateMap<Filme, ReadFilmeDto>();
+            CreateMap<UpdateFilmeDto, Filme>();
         }
         
     }

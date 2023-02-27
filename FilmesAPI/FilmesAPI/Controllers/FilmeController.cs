@@ -10,48 +10,48 @@ namespace FilmesAPI.Controllers
     [Route("[controller]")]
     public class FilmeController : ControllerBase
     {
-        private FilmeContext _context; // Campo do tipo FilmeContext
+        private FilmeContext _context; 
         private IMapper _mapper; 
 
-        public FilmeController(FilmeContext context, IMapper mapper)// Construtor para inicializar o campo FilmeContext _context
+        public FilmeController(FilmeContext context, IMapper mapper)
         {
-            _context = context; // será usado para guardar info no banco e tbm acessar essas infos
+            _context = context; 
             _mapper = mapper;
         }
         
 
         [HttpPost]
-        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)//[FromBody] a informação do filme vem do corpo da requisição, ou seja, do post que o usuario fez
+        public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
         {
-            Filme filme = _mapper.Map<Filme>(filmeDto); // Converte o filmeDto para um Filme e guarda na variável filme
-            
-            _context.Filmes.Add(filme);// Adiciona filmes
-            _context.SaveChanges();// Salva as alterações no banco de dados
+            Filme filme = _mapper.Map<Filme>(filmeDto); 
+
+            _context.Filmes.Add(filme);
+            _context.SaveChanges();
             return CreatedAtAction(nameof(RecuperaFilmePeloId), new { Id = filme.Id }, filme);
         }
 
         [HttpGet]
-        public IEnumerable<Filme> RecuperarFilmes() // enumeravel de filme
+        public IEnumerable<Filme> RecuperarFilmes() 
         {
-            return _context.Filmes; // Recupera filmes
+            return _context.Filmes; 
         }
 
-        [HttpGet("{id}")]// a expressão "{id}" é a forma de passar o parâmetro id do método abaixo. O valor é passado dentro da URL ex.: https://localhost:7206/filme/1 . A url com /1 é a forma de saber que estamos utilizando o httpget com parâmetro
-        public IActionResult RecuperaFilmePeloId(int id) // IActionResult é uma interface de resultado de ação. Ex ok() e NotFound()
+        [HttpGet("{id}")]
+        public IActionResult RecuperaFilmePeloId(int id) 
         {
-            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id); // Função lâmbida... Estudar
+            Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id); 
             if(filme != null)
             {
                 ReadFilmeDto filmeDto = _mapper.Map<ReadFilmeDto>(filme);
                 
                 return Ok(filmeDto);
             }
-            return NotFound(); // Ação do IActionResult
+            return NotFound(); 
 
         }
 
-        [HttpPut("{id}")] // recebe o id do parâmetro abaixo
-        public  IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto) // [FromBody] corpo da requisição
+        [HttpPut("{id}")] 
+        public  IActionResult AtualizaFilme(int id, [FromBody] UpdateFilmeDto filmeDto) 
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
             if(filme == null)
@@ -59,13 +59,13 @@ namespace FilmesAPI.Controllers
                 return NotFound();
                 
             }
-            _mapper.Map(filmeDto, filme);//Transforma filmeDto em filme
+            _mapper.Map(filmeDto, filme);
             Console.WriteLine("Filme Atualizado com sucesso");
             _context.SaveChanges();
             return NoContent();
         }
 
-        [HttpDelete("{id}")]// detela pelo "id"
+        [HttpDelete("{id}")]
         public IActionResult DeletaFilme(int id)
         {
             Filme filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
